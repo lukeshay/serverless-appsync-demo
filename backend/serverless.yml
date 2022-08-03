@@ -2,6 +2,9 @@ service: serverless-appsync-backend
 
 frameworkVersion: '3'
 
+plugins:
+  - serverless-appsync-plugin
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -15,3 +18,27 @@ functions:
 resources:
  Resources:
    ${file(resources.yml)}
+
+custom:
+  appSync:
+    name: youtubeAppsyncApi
+    authenticationType: AMAZON_COGNITO_USER_POOLS
+    schema: ./schema.graphql
+    userPoolConfig:
+      awsRegion: us-east-1
+      defaultAction: ALLOW
+      userPoolId: !Ref cognitoUserPool
+    mappingTemplatesLocation: mapping-templates
+    mappingTemplates:
+      - type: Query
+        field: getBookById
+        dataSource: booksTable
+      - type: Mutation
+        field: createBook
+        dataSource: booksTable
+    dataSources:
+      - type: AMAZON_DYNAMODB
+        name: booksTable
+        config:
+          tableName: !Ref booksTable
+          
