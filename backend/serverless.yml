@@ -12,7 +12,6 @@ functions:
   hello:
     handler: handler.hello
 
-
 resources:
  Resources:
    ${file(resources.yml)}
