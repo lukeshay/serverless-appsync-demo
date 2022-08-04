@@ -1,17 +1,22 @@
-import { withAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
-import { API, graphqlOperation } from "aws-amplify";
+import { API } from "aws-amplify";
 import { useState } from "react";
 
 import { getBookById } from "./graphql/queries/book";
 
 const bookId = "d91f4994-de48-40d1-8f75-acf5f815b041";
 
-const App = ({ signOut, user }) => {
+const App = ({ signOut } = {}) => {
   const [book, setBook] = useState(null);
 
   const getBook = async () => {
-    const res = await API.graphql(graphqlOperation(getBookById, { bookId }));
+    const res = await API.graphql({
+      query: getBookById,
+      variables: {
+        bookId,
+      },
+      authMode: "AWS_IAM",
+    });
 
     setBook(res.data.getBookById);
   };
@@ -30,9 +35,9 @@ const App = ({ signOut, user }) => {
           </article>
         )}
       </section>
-      <button onClick={signOut}>Sign out</button>
+      {signOut && <button onClick={signOut}>Sign out</button>}
     </>
   );
 };
 
-export default withAuthenticator(App);
+export default App;

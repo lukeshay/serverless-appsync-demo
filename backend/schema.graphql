@@ -4,7 +4,7 @@ schema {
 }
 
 type Query {
-  getBookById(bookId: ID!): Book!
+  getBookById(bookId: ID!): Book! @aws_iam
   listBooks(limit: Int!, nextToken: String): BooksPage!
   myOrders(limit: Int!, nextToken: String): OrderItemsPage!
 }
@@ -26,7 +26,7 @@ type BooksPage {
   nextToken: String
 }
 
-type Book {
+type Book @aws_iam {
   bookId: ID!
   title: String!
   description: String!
