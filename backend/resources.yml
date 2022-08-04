@@ -140,12 +140,12 @@ cognitoUnauthIAMRole:
     AssumeRolePolicyDocument:
       Version: "2012-10-17"
       Statement:
-      - Effect: "Allow"
-        Principal:
-          Federated:
-            - "cognito-identity.amazonaws.com"
-        Action:
-          - "sts:AssumeRoleWithWebIdentity" 
+        - Effect: "Allow"
+          Principal:
+            Federated:
+              - "cognito-identity.amazonaws.com"
+          Action:
+            - "sts:AssumeRoleWithWebIdentity"
     Policies:
       - PolicyName: "youtube-bookstore-unauth-user-policy"
         PolicyDocument:
@@ -155,7 +155,10 @@ cognitoUnauthIAMRole:
               Action:
                 - "appsync:GraphQL"
               Resource:
-                - "arn:aws:appsync:us-east-1:115109697687:apis/6vjkdcyvmjgp5fdxr5j3ew5ygm/types/Query/fields/getBookById"
+                - Fn::Join:
+                    - ""
+                    - - !Ref GraphQlApi
+                      - "/types/Query/fields/getBookById"
 
 cognitoIdentityPoolRoleAttachment:
   Type: AWS::Cognito::IdentityPoolRoleAttachment
